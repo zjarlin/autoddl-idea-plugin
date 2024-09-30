@@ -13,12 +13,13 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    依据实体
-    自动生成建表语句
-    自动增加数据库没有的列
-     依据实体
-    自动生成建表语句
-    自动增加数据库没有的列
+    在idea中也能甜甜的生成建表语句, 用户可以选择调用大模型的能力,初步生成结构化建表表单 (以下简称建表的表单元数据J)
+    对于表单的元数据J ,用户仍可以二次编辑
+   -------
+    用户只需操心Java中的类型,插件帮你自动映射为数据库建表语句
+    用户也可以不调用LLM能力,直接手动写表单来生成DDL语句
+    ------
+   插件入口在Tools菜单下->AutoDDL
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
