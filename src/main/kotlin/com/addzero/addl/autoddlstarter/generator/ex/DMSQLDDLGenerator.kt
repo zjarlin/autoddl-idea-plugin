@@ -23,8 +23,15 @@ class DMSQLDDLGenerator : DatabaseDDLGenerator() {
 
      tableEnglishName = tableEnglishName.uppercase() // 达梦数据库表名通常为大写
 
+        val tableRef = if (databaseName.isBlank()) {
+            JlStrUtil.makeSurroundWith(tableEnglishName.uppercase(), "\"")
+        } else {
+            "\"$databaseName\".\"${tableEnglishName.uppercase()}\""
+        }
+
+
         val createTableSQL = """
-    CREATE TABLE "$tableEnglishName" (
+    CREATE TABLE "$tableRef" (
         "ID" VARCHAR(64) NOT NULL AUTO_INCREMENT,
         "CREATED_BY" VARCHAR(255) NOT NULL COMMENT '创建者',
         "UPDATED_BY" VARCHAR(255) NOT NULL COMMENT '更新者',
@@ -33,10 +40,10 @@ class DMSQLDDLGenerator : DatabaseDDLGenerator() {
         ${
             dto.joinToString(System.lineSeparator()) {
                 """
-                    "${it.colName.uppercase()}" ${it.colType}  COMMENT '${it.colComment}' 
+                    "${it.colName.uppercase()}" ${it.colType}  COMMENT '${it .colComment}' ,
                 """.trimIndent()
             }
-        },
+        }
         PRIMARY KEY ("ID")
     ) STORAGE(ON "MAIN", CLUSTERBTR)
     COMMENT = '$tableChineseName'; 

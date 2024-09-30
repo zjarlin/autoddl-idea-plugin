@@ -111,6 +111,9 @@ private fun dbask(question: String): String? {
 }
 
  fun quesDba(string: String): FormDTO? {
+     if (string.isBlank()) {
+         return defaultdTO()
+     }
     try {
         val dbask = dbask(string)
         val parseObject = dbask?.parseObject(Dba::class.java)

@@ -25,10 +25,10 @@ class MysqlDDLGenerator : DatabaseDDLGenerator() {
             dto.joinToString(System.lineSeparator()) {
                 val colLength =it.colLength
                 """
-                       `${it.colName}` ${it.colType}    $colLength    COMMENT '${it .colComment}' 
+                       `${it.colName}` ${it.colType}    $colLength    COMMENT '${it .colComment}' ,
                 """.trimIndent()
             }
-        },
+        }
         PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
      COMMENT = '${tableChineseName}'; 

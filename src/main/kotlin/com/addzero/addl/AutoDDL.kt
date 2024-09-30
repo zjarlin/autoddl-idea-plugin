@@ -71,6 +71,9 @@ private fun genDDL(formDTO: FormDTO): String {
     val databaseDDLGenerator = getDatabaseDDLGenerator(dbType)
     val generateCreateTableDDL = databaseDDLGenerator.generateCreateTableDDL(createDDLContext)
     val getenv = System.getenv("DASHSCOPE_API_KEY")
+    if (getenv.isBlank()) {
+        throw RuntimeException("请设置环境变量 DASHSCOPE_API_KEY")
+    }
 
     return generateCreateTableDDL
 }
