@@ -2,14 +2,11 @@ package com.addzero.addl.autoddlstarter.generator.entity
 
 import java.util.function.Predicate
 
-
 /**
  * @author zjarlin
  * @since 2023/11/4 09:24
  */
 data class FieldMapping(
-//    val clazz: Array<Class<out Any>>,
-
     val predi: Predicate<JavaFieldMetaInfo>,
     val mysqlType: String,
     val pgType: String,
@@ -17,6 +14,7 @@ data class FieldMapping(
     val dmType: String,
     val length: String,
     val classRef: Class<*>,
-    var javaClass: String="",
-    var javaClassSimple: String="",
-)
+){
+    var javaClassRef: String=classRef.name
+    var javaClassSimple: String=classRef.simpleName
+}

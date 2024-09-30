@@ -1,4 +1,4 @@
-package com.addzero.addl.autoddlstarter.tools
+package com.addzero.addl.util
 
 import java.util.function.BiConsumer
 import java.util.function.BiFunction

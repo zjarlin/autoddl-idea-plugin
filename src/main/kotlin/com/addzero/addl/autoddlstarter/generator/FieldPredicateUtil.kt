@@ -3,7 +3,6 @@ package com.addzero.addl.autoddlstarter.generator
 import cn.hutool.core.date.DateTime
 import cn.hutool.core.util.StrUtil
 import com.addzero.addl.autoddlstarter.generator.entity.JavaFieldMetaInfo
-import java.lang.reflect.Field
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime

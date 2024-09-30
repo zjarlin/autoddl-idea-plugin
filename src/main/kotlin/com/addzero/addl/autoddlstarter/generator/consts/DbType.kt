@@ -1,4 +1,4 @@
-package com.addzero.addl.autoddlstarter.generator
+package com.addzero.addl.autoddlstarter.generator.consts
 
 const val MYSQL = "mysql"
 const val ORACLE = "oracle"

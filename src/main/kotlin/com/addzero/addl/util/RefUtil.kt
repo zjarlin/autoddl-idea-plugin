@@ -1,4 +1,4 @@
-package com.addzero.addl.autoddlstarter.tools
+package com.addzero.addl.util
 
 import cn.hutool.core.util.ReflectUtil
 import com.addzero.addl.autoddlstarter.generator.defaultconfig.DefaultMetaInfoUtil.getCommentFun
@@ -6,6 +6,7 @@ import com.addzero.addl.autoddlstarter.generator.entity.JavaFieldMetaInfo
 import com.alibaba.fastjson2.JSON
 import com.alibaba.fastjson2.JSONObject
 import java.lang.reflect.Field
+import java.lang.reflect.Method
 import java.util.*
 
 object RefUtil {
@@ -80,7 +81,7 @@ object RefUtil {
 
                 // 查找字段上的注解
 //                val comment      DefaultMetaInfoUtil.getColComment(method)
-                val comment = getCommentFun(method)
+                val comment = getCommentFunByMethod(method)
 
                 // 将属性信息添加到列表中
                 fieldMetaInfoList.add(
@@ -95,6 +96,10 @@ object RefUtil {
         }
 
         return fieldMetaInfoList
+    }
+
+    private fun getCommentFunByMethod(method: Method):String {
+        TODO("Not yet implemented")
     }
 
 

@@ -1,14 +1,19 @@
 package com.addzero.addl.autoddlstarter.generator.defaultconfig
 
-import com.addzero.addl.autoddlstarter.anno.Comment
-import com.addzero.addl.autoddlstarter.generator.MYSQL
-import com.addzero.addl.autoddlstarter.tools.JlStrUtil
-import com.addzero.addl.autoddlstarter.tools.JlStrUtil.shortEng
 //import io.swagger.v3.oas.annotations.media.Schema
 //import org.babyfish.jimmer.sql.Table
+import cn.hutool.core.annotation.AnnotationUtil
+import com.addzero.addl.autoddlstarter.anno.Comment
+import com.addzero.addl.autoddlstarter.generator.consts.MYSQL
+import com.addzero.addl.autoddlstarter.generator.entity.JavaFieldMetaInfo
+import com.addzero.addl.ktututil.toUnderlineCase
+import com.addzero.addl.util.JlStrUtil
 import java.lang.reflect.AnnotatedElement
+import java.lang.reflect.Field
+
 
 interface IMetaInfoUtil {
+
     /**
      * 数据库类型
      * @return [String]
@@ -29,12 +34,16 @@ interface IMetaInfoUtil {
      */
     fun getTableChineseNameFun(clazz: Class<*>): String
 
+    fun getColumnNameFun(element: JavaFieldMetaInfo): String
+
     /**
      * 字段的注释如何获取
      * @param [method]
      * @return [String]
+     * @param [element]
+     * @return [String]
      */
-    fun getCommentFun(element: AnnotatedElement): String?
+    fun getCommentFun(element: AnnotatedElement): String
 }
 
 /**
@@ -43,15 +52,15 @@ interface IMetaInfoUtil {
  * @date 2024/09/25
  */
 object DefaultMetaInfoUtil : IMetaInfoUtil {
+
     override fun mydbType(): String {
         return MYSQL
     }
 
     override fun getTableEnglishNameFun(clazz: Class<*>): String {
-        TODO()
-//        val annotation = clazz.getAnnotation(Table::class.java) ?: return clazz.simpleName
-//        val tableEnglishName = annotation.name
-//        return shortEng(tableEnglishName, getTableChineseNameFun(clazz))
+        //暂时没引入Jimmer框架先随便写
+        val annotation = AnnotationUtil.getAnnotation(clazz, Comment::class.java)
+        return annotation?.value ?: ""
     }
 
     override fun getTableChineseNameFun(clazz: Class<*>): String {
@@ -59,9 +68,19 @@ object DefaultMetaInfoUtil : IMetaInfoUtil {
         return JlStrUtil.removeNotChinese(annotation.value)
     }
 
+    override fun getColumnNameFun(element: JavaFieldMetaInfo): String {
+        return element.name.toUnderlineCase()
+    }
+
+
     override fun getCommentFun(element: AnnotatedElement): String {
-        TODO()
-//        val annotation = element.getAnnotation(Schema::class.java) ?: return ""
-//        return annotation.description
+        val annotation = element.getAnnotation(Comment::class.java)
+        annotation ?: return ""
+
+        if (element is Field) {
+            return if (BaseMetaInfoUtil.isPrimaryKeyBoolean(element.name)) "主键" else        return annotation.value
+
+        }
+        return ""
     }
 }

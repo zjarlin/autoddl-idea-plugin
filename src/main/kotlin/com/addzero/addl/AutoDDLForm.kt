@@ -1,11 +1,17 @@
 package com.addzero.addl
 
 import FieldsTableModel
-import com.addzero.addl.autoddlstarter.generator.*
+import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.javaTypesEnum
+import com.addzero.addl.autoddlstarter.generator.consts.DM
+import com.addzero.addl.autoddlstarter.generator.consts.MYSQL
+import com.addzero.addl.autoddlstarter.generator.consts.ORACLE
+import com.addzero.addl.autoddlstarter.generator.consts.POSTGRESQL
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.table.JBTable
+import defaultdTO
+import quesDba
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.GridLayout
@@ -57,7 +63,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         fieldsTable = JBTable(fieldsTableModel)
 
         // 设置 Java 类型下拉框
-        val javaTypesEnum = DatabaseDDLGenerator.javaTypesEnum
+        val javaTypesEnum = javaTypesEnum
         val javaTypeComboBox = ComboBox(javaTypesEnum)
         fieldsTable!!.columnModel.getColumn(0).cellEditor = DefaultCellEditor(javaTypeComboBox)
 
@@ -142,11 +148,13 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
 
     // 模拟调用大模型接口的函数
     private fun callLargeModelApi(inputText: String): FormDTO {
+
+        val quesDba = quesDba(inputText)
         // 这里实现你调用大模型的逻辑
         // 返回表单实体对象
-        val fieldDTO = FieldDTO("String", "字段名", "字段注释")
-        return FormDTO("示例表名", "示例英文名", "示例数据库类型", "示例数据库名称", listOf(fieldDTO))
+        return quesDba!!
     }
+
 
     val formDTO: FormDTO
         // 获取表单数据
@@ -156,7 +164,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
             val dbType = dbTypeComboBox!!.selectedItem as String
             val dbName = dbNameField!!.text
             val fields = fieldsTableModel?.fields
-            return FormDTO(tableName, tabEngName, dbType, dbName, fields)
+            return FormDTO(tableName, tabEngName, dbType, dbName, fields!!)
         }
 
     // 右下角的按钮（确定、取消）

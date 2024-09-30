@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "addl"
+rootProject.name = "autoddl-idea-plugin"

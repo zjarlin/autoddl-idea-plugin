@@ -1,11 +1,26 @@
 package com.addzero.addl.autoddlstarter.generator.entity
 
-
 data class DDLContext(
-    val simpleClassName: String,
-    var tableEnglishName: String,
     val tableChineseName: String,
+    var tableEnglishName: String,
     val databaseType: String,
-    val dto: List<RangeContext>,
-    val databaseName: String // 添加到构造函数中
+    val databaseName: String = "",
+    val dto: List<DDlRangeContext>,
+)
+
+
+data class DDlRangeContext(
+    var colName: String,
+    val colType: String,
+    val colComment: String,
+    val colLength: String,
+    val isPrimaryKey: String,
+    val isSelfIncreasing: String,
+//    val autoIncrement: String,
+)
+
+data class DDLRangeContextUserInput(
+    val javaType: String,
+    val colName: String,
+    val colComment: String,
 )

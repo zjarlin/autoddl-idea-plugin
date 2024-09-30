@@ -4,8 +4,8 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
     id("org.jetbrains.intellij") version "1.17.4"
-
 }
+val jimmerVersion = "0.8.184"
 
 group = "com.addzero"
 version = "1.0-SNAPSHOT"
@@ -24,9 +24,13 @@ repositories {
 intellij {
     version.set("2023.2.6")
     type.set("IC") // Target IDE Platform
-    plugins.set(listOf(/* Plugin Dependencies */))
+    plugins.set(listOf(
+//    "com.intellij.java", "org.jetbrains.kotlin"
+    ))
 }
 dependencies {
+    implementation("org.babyfish.jimmer:jimmer-spring-boot-starter:${jimmerVersion}")
+    implementation("io.swagger.core.v3:swagger-annotations:2.2.22")
     implementation("com.belerweb:pinyin4j:2.5.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("cn.hutool:hutool-all:5.8.25")
