@@ -100,8 +100,11 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
 
     private fun addAdvancedPanel() {
         val advancedPanelContainer = JPanel(BorderLayout())
-        val toggleButton = JToggleButton("调用LLM能力提供建表上下文(用户可二次编辑)", false)
+        val toggleButton = JToggleButton("问问大模型", false)
         llmPanel = createLLMPanel() // 创建LLM面板
+        
+
+
 
         // 折叠菜单的逻辑
         toggleButton.addActionListener {
