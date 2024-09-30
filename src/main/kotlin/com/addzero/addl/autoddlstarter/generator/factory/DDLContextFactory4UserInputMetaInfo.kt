@@ -18,7 +18,7 @@ object DDLContextFactory4UserInputMetaInfo {
         tableEngLishName: String,
         tableChineseName: String,
         databaseType: String = MYSQL,
-        DDLRangeContextUserInput: List<DDLRangeContextUserInput>,
+        ddlRangeContextUserInput: List<DDLRangeContextUserInput>,
     ): DDLContext {
 
 
@@ -29,7 +29,7 @@ object DDLContextFactory4UserInputMetaInfo {
                 hanziToPinyin
             },
             databaseType = databaseType,
-            dto = createRangeContext1(databaseType, DDLRangeContextUserInput),
+            dto = createRangeContext1(databaseType, ddlRangeContextUserInput),
         )
     }
 
