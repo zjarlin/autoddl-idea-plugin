@@ -5,6 +5,7 @@ import com.addzero.addl.autoddlstarter.generator.DatabaseDDLGenerator
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.fieldMappings
 import com.addzero.addl.autoddlstarter.generator.entity.DDLContext
 import com.addzero.addl.autoddlstarter.generator.entity.JavaFieldMetaInfo
+import com.addzero.addl.ktututil.toUnderlineCase
 import com.addzero.addl.util.JlStrUtil
 
 
@@ -25,7 +26,7 @@ class MysqlDDLGenerator : DatabaseDDLGenerator() {
             dto.joinToString(System.lineSeparator()) {
                 val colLength =it.colLength
                 """
-                       `${it.colName}` ${it.colType}    $colLength    COMMENT '${it .colComment}' ,
+                       `${it.colName.toUnderlineCase()}` ${it.colType}    $colLength    COMMENT '${it .colComment}' ,
                 """.trimIndent()
             }
         }

@@ -24,7 +24,7 @@ class PostgreSQLDDLGenerator : DatabaseDDLGenerator() {
         ${
             dto.joinToString(System.lineSeparator()) {
                 """
-                    "${it.colName}" ${it.colType} COMMENT '${it.colComment}'
+                    "${it.colName}" ${it.colType} COMMENT '${it.colComment}',
                 """.trimIndent()
             }
         }
