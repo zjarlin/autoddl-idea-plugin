@@ -1,4 +1,5 @@
 import org.gradle.internal.impldep.org.eclipse.jgit.lib.ObjectChecker.type
+import org.jetbrains.intellij.pluginRepository.internal.api.PluginUpdateVersion
 
 plugins {
     id("java")
@@ -7,8 +8,10 @@ plugins {
 }
 
 group = "com.addzero"
-version = "1.0-SNAPSHOT"
-
+version = "1.0"
+configurations.all {
+    resolutionStrategy.sortArtifacts(ResolutionStrategy.SortOrder.DEPENDENCY_FIRST)
+}
 repositories {
     mavenLocal()
     maven { url = uri("https://maven.aliyun.com/repository/public/") }
@@ -21,10 +24,12 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
+//    localPath.set(ideahome)
     version.set("2023.2.6")
     type.set("IC") // Target IDE Platform
     plugins.set(listOf(
 //    "com.intellij.java", "org.jetbrains.kotlin"
+
     ))
 }
 dependencies {
@@ -45,7 +50,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("232")
+        sinceBuild.set("222.3345.118")
         untilBuild.set("242.*")
     }
 

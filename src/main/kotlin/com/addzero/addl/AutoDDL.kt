@@ -1,13 +1,16 @@
 package com.addzero.addl
 
+import cn.hutool.extra.pinyin.PinyinUtil
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.getDatabaseDDLGenerator
 import com.addzero.addl.autoddlstarter.generator.entity.DDLRangeContextUserInput
 import com.addzero.addl.autoddlstarter.generator.factory.DDLContextFactory4UserInputMetaInfo
+import com.addzero.addl.util.PinYin4JUtils
 import com.alibaba.fastjson2.JSON
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import java.lang.Thread.currentThread
 import javax.swing.JTextField
 
 class AutoDDL : AnAction() {

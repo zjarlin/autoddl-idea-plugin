@@ -13,18 +13,30 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-
-
-    在idea中也能甜甜的生成建表语句, 用户可以选择调用大模型的能力,初步生成结构化建表表单 (以下简称建表的表单元数据J)
-    对于表单的元数据J ,用户仍可以二次编辑
-   -------
-    用户只需操心Java中的类型,插件帮你自动映射为数据库建表语句
-    用户也可以不调用LLM能力,直接手动写表单来生成DDL语句
-    ------
-   插件入口在Tools菜单下->AutoDDL
-   注: 系统的环境变量需要增加阿里模型DASHSCOPE_API_KEY才可以使用LLM能力
-  #阿里灵积
-export DASHSCOPE_API_KEY='sk-xxxxxxxxxx'
+    <h3>English:</h3>
+<ul>
+<li>In IDEA, the CREATE TABLE statements can also be generated sweetly. Users can choose to utilize the capabilities of large language models to initially generate structured form for creating tables (hereinafter referred to as the form cell metadata J for creating tables).</li>
+<li>For the form metadata J, users can still make secondary edits.</li>
+<li>-------</li>
+<li>Users only need to worry about the types in Java, and the plugin will automatically map them into database CREATE TABLE statements for you.</li>
+<li>Users can also directly write forms manually to generate DDL statements without invoking the LLM capabilities.</li>
+<li>------</li>
+<li>The plugin entry is under the Tools menu -> AutoDDL.</li>
+<li>Note: The environment variable of the system needs to add the Ali model DASHSCOPE_API_KEY to use the LLM capabilities.</li>
+<li>#export DASHSCOPE_API_KEY='sk-xxxxxxxxxx'</li>
+</ul>
+<h3>中文：</h3>
+    <ul>
+    <li>在idea中也能甜甜的生成建表语句, 用户可以选择调用大模型的能力,初步生成结构化建表表单 (以下简称建表的表单元数据J)</li>
+    <li>对于表单的元数据J ,用户仍可以二次编辑</li>
+   <li>-------</li>
+    <li>用户只需操心Java中的类型,插件帮你自动映射为数据库建表语句</li>
+    <li>用户也可以不调用LLM能力,直接手动写表单来生成DDL语句</li>
+    <li>------</li>
+   <li>插件入口在Tools菜单下->AutoDDL</li>
+   <li>注: 系统的环境变量需要增加阿里模型DASHSCOPE_API_KEY才可以使用LLM能力</li>
+  <li>#阿里灵积 export DASHSCOPE_API_KEY='sk-xxxxxxxxxx'</li>
+    </ul>
 
   ]]></description>
 

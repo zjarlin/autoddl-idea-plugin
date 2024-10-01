@@ -25,9 +25,7 @@ object DDLContextFactory4UserInputMetaInfo {
         val hanziToPinyin = PinYin4JUtils.hanziToPinyin(tableChineseName, "_")
         return DDLContext(
             tableChineseName = tableChineseName,
-            tableEnglishName = tableEngLishName.ifBlank {
-                hanziToPinyin
-            },
+            tableEnglishName = tableEngLishName.ifBlank { hanziToPinyin },
             databaseType = databaseType,
             dto = createRangeContext1(databaseType, ddlRangeContextUserInput),
         )
@@ -59,8 +57,7 @@ object DDLContextFactory4UserInputMetaInfo {
             val primaryKey = BaseMetaInfoUtil.isPrimaryKey(toCamelCase)
             val autoIncrement = BaseMetaInfoUtil.isAutoIncrement(toCamelCase)
             DDlRangeContext(
-                colName, mapTypeByJavaType, colComment, length,
-                primaryKey, autoIncrement
+                colName, mapTypeByJavaType, colComment, length, primaryKey, autoIncrement
             )
         }.toList()
         return toList
