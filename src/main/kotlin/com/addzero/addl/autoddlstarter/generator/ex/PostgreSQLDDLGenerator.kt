@@ -15,23 +15,30 @@ class PostgreSQLDDLGenerator : DatabaseDDLGenerator() {
         val dto = ddlContext.dto
 
         val createTableSQL = """
-    CREATE TABLE "$tableEnglishName" (
-        "ID" SERIAL PRIMARY KEY,
-        "CREATE_BY" VARCHAR(255) NOT NULL COMMENT '创建者',
-        "UPDATE_BY" VARCHAR(255) NOT NULL COMMENT '更新者',
-        "CREATE_TIME" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 
-        '创建时间',
-        "UPDATE_TIME" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE 
-        CURRENT_TIMESTAMP COMMENT '更新时间',
+    create table "$tableEnglishName" (
+        "id" varchar(64) primary key,
+        "create_by" varchar(255) ,
+        "update_by" varchar(255) ,
+        "create_time" timestamp ,
+        "update_time" timestamp ,
         ${
             dto.joinToString(System.lineSeparator()) {
                 """
-                    "${it.colName}" ${it.colType} COMMENT '${it.colComment}',
+                    "${it.colName}" ${it.colType} comment '${it.colComment}',
                 """.trimIndent()
             }
         }
+        ${
+            """
+            comment on column $tableEnglishName.id is '主键';
+            comment on column $tableEnglishName.create_by is '创建者';
+            comment on column $tableEnglishName.create_time is '创建时间';
+            comment on column $tableEnglishName.update_by is '更新者';
+            comment on column $tableEnglishName.update_time is '更新时间'; 
+            """.trimIndent()
+        }
     );
-    COMMENT ON TABLE "$tableEnglishName" IS '$tableChineseName';
+    comment on table "$tableEnglishName" is '$tableChineseName';
 """.trimIndent()
 
         return createTableSQL
@@ -47,12 +54,11 @@ class PostgreSQLDDLGenerator : DatabaseDDLGenerator() {
             } else {
                 "\"$databaseName\".\"$tableEnglishName\""
             }
-
             // 生成 ALTER 语句以及字段注释
             val upperCaseColName = StrUtil.toUnderlineCase(it.colName).uppercase()
             """
-            ALTER TABLE $tableRef ADD COLUMN "$upperCaseColName" ${it.colType}(${it.colLength});
-            COMMENT ON COLUMN $tableRef."$upperCaseColName" IS '${it.colComment}';
+            alter table $tableRef add column "$upperCaseColName" ${it.colType}(${it.colLength});
+            comment on column $tableRef."$upperCaseColName" is '${it.colComment}';
         """.trimIndent()
         }
 

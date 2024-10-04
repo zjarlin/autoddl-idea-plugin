@@ -45,7 +45,20 @@ class DMSQLDDLGenerator : DatabaseDDLGenerator() {
             """.trimIndent()
         }
 
-        return "$createTableSQL\n$comments"
+        return """$createTableSQL
+       ${
+            """
+            COMMENT ON COLUMN $tableRef.ID IS '主键';
+            COMMENT ON COLUMN $tableRef.CREATE_BY IS '创建者';
+            COMMENT ON COLUMN $tableRef.CREATE_TIME IS '创建时间';
+            COMMENT ON COLUMN $tableRef.UPDATE_BY IS '更新者';
+            COMMENT ON COLUMN $tableRef.UPDATE_TIME IS '更新时间'; 
+            """.trimIndent()
+        }
+$comments
+
+
+"""
     }
 
     override fun generateAddColDDL(ddlContext: DDLContext): String {
