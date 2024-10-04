@@ -22,8 +22,8 @@
 <li>Users can also directly write forms manually to generate DDL statements without invoking the LLM capabilities.</li>
 <li>------</li>
 <li>The plugin entry is under the Tools menu -> AutoDDL.</li>
-<li>Note: The environment variable of the system needs to add the Ali model DASHSCOPE_API_KEY to use the LLM capabilities.</li>
-<li>#export DASHSCOPE_API_KEY='sk-xxxxxxxxxx'</li>
+<li>Note: Users need to configure the large model KEY in the IDEA settings</li>
+<li># Currently, only Alibaba DASHSCOPE_API_KEY='sk-xxxxxxxxxx' is supported</li>
 </ul>
 <h3>中文：</h3>
     <ul>
@@ -34,7 +34,7 @@
     <li>用户也可以不调用LLM能力,直接手动写表单来生成DDL语句</li>
     <li>------</li>
    <li>插件入口在Tools菜单下->AutoDDL</li>
-   <li>注: 系统的环境变量需要增加阿里模型DASHSCOPE_API_KEY才可以使用LLM能力,或是在idea设置中配置KEY</li> <li>#阿里灵积 export DASHSCOPE_API_KEY='sk-xxxxxxxxxx'</li>
+   <li>注: 用户需要在idea设置中配置大模型KEY</li> <li>#目前只支持阿里灵积 DASHSCOPE_API_KEY='sk-xxxxxxxxxx'</li>
     </ul>
 
   ]]></description>
