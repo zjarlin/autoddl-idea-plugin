@@ -10,7 +10,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.table.JBTable
-import defaultdTO
 import quesDba
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -29,6 +28,12 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
     private var fieldsTableModel: FieldsTableModel? = null
     private var llmPanel: JPanel? = null // 存放LLM相关内容的面板
 
+    // 新增成员变量
+    private lateinit var tabbedPane: JTabbedPane
+    private lateinit var panelGenerateDDL: JPanel
+    private lateinit var panelFunction1: JPanel
+    private lateinit var panelFunction2: JPanel
+
     init {
         title = "Generate DDL"
         init()
@@ -36,25 +41,46 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
 
     override fun createCenterPanel(): JComponent? {
         mainPanel = JPanel(BorderLayout())
+        tabbedPane = JTabbedPane()
+
+        // 创建标签页
+        panelGenerateDDL = createGenerateDDLPanel()
+        panelFunction1 = createFunction1Panel()
+        panelFunction2 = createFunction2Panel()
+
+        tabbedPane.addTab("生成建表语句", panelGenerateDDL)
+        tabbedPane.addTab("根据实体生成建表语句", panelFunction1)
+        tabbedPane.addTab("根据Jimmer实体生成建表语句", panelFunction2)
+
+        mainPanel!!.add(tabbedPane, BorderLayout.CENTER)
+
+        // 添加高级功能折叠菜单
+        addAdvancedPanel()
+        return mainPanel
+    }
+
+    private fun createGenerateDDLPanel(): JPanel {
+        val panel = JPanel(BorderLayout())
         val usageInstruction =
-            JLabel("<html><font color='red'>请填写必要的表名、字段注释，并选择 Java 类型</font></html>")
-        mainPanel!!.add(usageInstruction, BorderLayout.SOUTH)
+            JLabel("<html><font color='red'>您可以将建表需求告诉LLM(例如:创建一张xx表，要求包含哪些字段),然后使用LLM的建议修改表单信息。</font></html>")
+        panel.add(usageInstruction, BorderLayout.SOUTH)
 
         // 表单信息区域
         val formPanel = JPanel(GridLayout(4, 2))
-        formPanel.add(JLabel("表中文名:"))
-        tableNameField = JTextField()
-        formPanel.add(tableNameField)
 
-        formPanel.add(JLabel("表名(为空默认中文采用表名拼音):"))
-        tableEnglishNameField = JTextField()
-        formPanel.add(tableEnglishNameField)
-
-        formPanel.add(JLabel("数据库类型:"))
+        formPanel.add(JLabel("*数据库类型:"))
         dbTypeComboBox = ComboBox(arrayOf(MYSQL, POSTGRESQL, DM, ORACLE))
         formPanel.add(dbTypeComboBox)
 
-        formPanel.add(JLabel("数据库名称 (可空,达梦必须填):"))
+        formPanel.add(JLabel("*表中文名:"))
+        tableNameField = JTextField()
+        formPanel.add(tableNameField)
+
+        formPanel.add(JLabel("表名(可空,为空默认表中文名转拼音):"))
+        tableEnglishNameField = JTextField()
+        formPanel.add(tableEnglishNameField)
+
+        formPanel.add(JLabel("数据库名称 (可空):"))
         dbNameField = JTextField()
         formPanel.add(dbNameField)
 
@@ -89,22 +115,30 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         tablePanel.preferredSize = Dimension(600, 200)
 
         // 添加表单信息区域和字段信息区域
-        mainPanel!!.add(formPanel, BorderLayout.NORTH)
-        mainPanel!!.add(tablePanel, BorderLayout.CENTER)
+        panel.add(formPanel, BorderLayout.NORTH)
+        panel.add(tablePanel, BorderLayout.CENTER)
 
-        // 添加高级功能折叠菜单
-        addAdvancedPanel()
+        return panel
+    }
 
-        return mainPanel
+    private fun createFunction1Panel(): JPanel {
+        // 在这里实现功能1的面板
+        val panel = JPanel()
+        panel.add(JLabel("暂未开放"))
+        return panel
+    }
+
+    private fun createFunction2Panel(): JPanel {
+        // 在这里实现功能2的面板
+        val panel = JPanel()
+        panel.add(JLabel("暂未开放"))
+        return panel
     }
 
     private fun addAdvancedPanel() {
         val advancedPanelContainer = JPanel(BorderLayout())
         val toggleButton = JToggleButton("问问大模型", false)
         llmPanel = createLLMPanel() // 创建LLM面板
-        
-
-
 
         // 折叠菜单的逻辑
         toggleButton.addActionListener {
@@ -121,7 +155,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
     private fun createLLMPanel(): JPanel {
         val llmPanel = JPanel(BorderLayout())
         val inputTextArea = JTextArea(5, 30) // 长文本框
-        val submitButton = JButton("提交")
+        val submitButton = JButton("使用LLM建议回填表单")
 
         submitButton.addActionListener {
             // 这里调用大模型接口，并获取表单实体对象
@@ -138,10 +172,6 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
             fieldsTableModel!!.fireTableDataChanged()
         }
 
-
-        // 让用户可以编辑字段表格
-        fieldsTableModel!!.fireTableDataChanged()
-
         llmPanel.add(inputTextArea, BorderLayout.CENTER)
         llmPanel.add(submitButton, BorderLayout.SOUTH)
         llmPanel.isVisible = false // 默认隐藏
@@ -151,13 +181,11 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
 
     // 模拟调用大模型接口的函数
     private fun callLargeModelApi(inputText: String): FormDTO {
-
         val quesDba = quesDba(inputText)
         // 这里实现你调用大模型的逻辑
         // 返回表单实体对象
         return quesDba!!
     }
-
 
     val formDTO: FormDTO
         // 获取表单数据
