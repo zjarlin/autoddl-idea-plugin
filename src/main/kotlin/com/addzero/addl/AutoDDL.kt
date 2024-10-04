@@ -63,15 +63,6 @@ private fun genDDL(formDTO: FormDTO): String {
     val databaseDDLGenerator = getDatabaseDDLGenerator(dbType)
     val generateCreateTableDDL = databaseDDLGenerator.generateCreateTableDDL(createDDLContext)
 
-    val settings = MyPluginSettings.instance
-
-// 修改设置项
-    val getenv = settings.state.aliLingjiModelKey
-
-// 保存设置（自动持久化）
-    if (getenv.isBlank()) {
-        throw RuntimeException("请设置环境变量 DASHSCOPE_API_KEY")
-    }
 
     return generateCreateTableDDL
 }

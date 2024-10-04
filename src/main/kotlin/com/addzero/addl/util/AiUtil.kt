@@ -1,9 +1,11 @@
 import cn.hutool.core.util.ReflectUtil
+import cn.hutool.core.util.StrUtil
 import cn.hutool.http.HttpRequest
 import com.addzero.addl.FieldDTO
 import com.addzero.addl.FormDTO
 import com.addzero.addl.ktututil.parseObject
 import com.addzero.addl.ktututil.toJson
+import com.addzero.addl.settings.MyPluginSettings
 import com.addzero.addl.util.Dba
 import com.addzero.addl.util.JlStrUtil.extractCodeBlockContent
 import com.addzero.addl.util.fieldinfo.getSimpleFieldInfoStr
@@ -40,9 +42,21 @@ data class MyMessage(
 
 fun getResponse(question: String, prompt: String): String? {
 
-    // 读取环境变量中的API Key
-    val name = "DASHSCOPE_API_KEY"
-    val apiKey = System.getenv(name) ?: "your_api_key_here"  // 替换成你的API Key
+
+
+    val settings = MyPluginSettings.instance
+
+// 修改设置项
+    val getenvBySetting = settings.state.aliLingjiModelKey
+    val getenvBySys = System.getenv("DASHSCOPE_API_KEY")
+
+
+// 保存设置（自动持久化）
+    if (getenvBySetting.isBlank()||getenvBySys.isBlank()) {
+        throw RuntimeException("请设置环境变量 DASHSCOPE_API_KEY")
+    }
+
+    val apiKey = StrUtil.firstNonBlank(getenvBySetting, getenvBySys)
     val baseUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
     // 构建请求内容
     val qwendto = Qwendto("qwen-max", listOf(MyMessage("system", prompt), MyMessage("user", question)))

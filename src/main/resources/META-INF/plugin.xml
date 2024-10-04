@@ -34,8 +34,7 @@
     <li>用户也可以不调用LLM能力,直接手动写表单来生成DDL语句</li>
     <li>------</li>
    <li>插件入口在Tools菜单下->AutoDDL</li>
-   <li>注: 系统的环境变量需要增加阿里模型DASHSCOPE_API_KEY才可以使用LLM能力</li>
-  <li>#阿里灵积 export DASHSCOPE_API_KEY='sk-xxxxxxxxxx'</li>
+   <li>注: 系统的环境变量需要增加阿里模型DASHSCOPE_API_KEY才可以使用LLM能力,或是在idea设置中配置KEY</li> <li>#阿里灵积 export DASHSCOPE_API_KEY='sk-xxxxxxxxxx'</li>
     </ul>
 
   ]]></description>
