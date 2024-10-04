@@ -28,20 +28,19 @@ fun buildStructureOutPutPrompt(clazz: Class<*>?): String {
     """.trimIndent()
     return prompt
 }
-data class Qwendto(
-  val model: String,
-val   messages: List<MyMessage>,
-)
 
+data class Qwendto(
+    val model: String,
+    val messages: List<MyMessage>,
+)
 
 
 data class MyMessage(
-    val role: String="",
-    val   content: String=""
+    val role: String = "",
+    val content: String = "",
 )
 
 fun getResponse(question: String, prompt: String): String? {
-
 
 
     val settings = MyPluginSettings.instance
@@ -51,12 +50,13 @@ fun getResponse(question: String, prompt: String): String? {
     val getenvBySys = System.getenv("DASHSCOPE_API_KEY")
 
 
-// 保存设置（自动持久化）
-    if (getenvBySetting.isBlank()||getenvBySys.isBlank()) {
+    val apiKey = StrUtil.firstNonBlank(getenvBySetting, getenvBySys)
+
+    if (apiKey.isBlank()) {
         throw RuntimeException("请设置环境变量 DASHSCOPE_API_KEY")
     }
 
-    val apiKey = StrUtil.firstNonBlank(getenvBySetting, getenvBySys)
+
     val baseUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
     // 构建请求内容
     val qwendto = Qwendto("qwen-max", listOf(MyMessage("system", prompt), MyMessage("user", question)))
@@ -74,8 +74,7 @@ fun getResponse(question: String, prompt: String): String? {
 //    """.trimIndent()
 
     // 发送POST请求，包含Authorization和Content-Type头
-    val response = HttpRequest.post(baseUrl)
-        .header("Authorization", "Bearer $apiKey")  // 设置Authorization头
+    val response = HttpRequest.post(baseUrl).header("Authorization", "Bearer $apiKey")  // 设置Authorization头
         .header("Content-Type", "application/json")  // 设置Content-Type头
         .body(toJson)  // 设置请求体
         .execute()
@@ -112,22 +111,21 @@ private fun dbask(question: String): String? {
 """.trimIndent()
 
 
-    val   promtTempla="""
+    val promtTempla = """
         $role
      $trimIndent1
      ${trimIndent}
  """.trimIndent()
     val response = getResponse(
-        question,
-       promtTempla
+        question, promtTempla
     )
     return response
 }
 
- fun quesDba(string: String): FormDTO? {
-     if (string.isBlank()) {
-         return defaultdTO()
-     }
+fun quesDba(string: String): FormDTO? {
+    if (string.isBlank()) {
+        return defaultdTO()
+    }
     try {
         val dbask = dbask(string)
         val parseObject = dbask?.parseObject(Dba::class.java)

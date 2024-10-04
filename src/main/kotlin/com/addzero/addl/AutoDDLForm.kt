@@ -48,14 +48,12 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         panelFunction1 = createFunction1Panel()
         panelFunction2 = createFunction2Panel()
 
-        tabbedPane.addTab("生成建表语句", panelGenerateDDL)
+        tabbedPane.addTab("根据元数据生成建表语句", panelGenerateDDL)
         tabbedPane.addTab("根据实体生成建表语句", panelFunction1)
         tabbedPane.addTab("根据Jimmer实体生成建表语句", panelFunction2)
 
         mainPanel!!.add(tabbedPane, BorderLayout.CENTER)
 
-        // 添加高级功能折叠菜单
-        addAdvancedPanel()
         return mainPanel
     }
 
@@ -85,6 +83,19 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         formPanel.add(dbNameField)
 
         // 字段信息区域
+        val tablePanel = fieldsJPanel()
+
+        // 添加表单信息区域和字段信息区域
+        panel.add(formPanel, BorderLayout.NORTH)
+        panel.add(tablePanel, BorderLayout.CENTER)
+        // 添加高级功能折叠菜单
+        addAdvancedPanel()
+
+
+        return panel
+    }
+
+    private fun fieldsJPanel(): JPanel {
         fieldsTableModel = FieldsTableModel()
         fieldsTable = JBTable(fieldsTableModel)
 
@@ -113,12 +124,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         val tablePanel = JPanel(BorderLayout())
         tablePanel.add(JScrollPane(fieldsTable), BorderLayout.CENTER)
         tablePanel.preferredSize = Dimension(600, 200)
-
-        // 添加表单信息区域和字段信息区域
-        panel.add(formPanel, BorderLayout.NORTH)
-        panel.add(tablePanel, BorderLayout.CENTER)
-
-        return panel
+        return tablePanel
     }
 
     private fun createFunction1Panel(): JPanel {
@@ -167,7 +173,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
             dbTypeComboBox!!.selectedItem = formEntity.dbType
             dbNameField!!.text = formEntity.dbName
             // 这里确保字段可以二次编辑
-            fieldsTableModel!!.fields = (formEntity.fields?.toMutableList() ?: listOf()) as MutableList<FieldDTO>
+            fieldsTableModel!!.fields = formEntity.fields?.toMutableList() as MutableList<FieldDTO>
             // 让用户可以编辑字段表格
             fieldsTableModel!!.fireTableDataChanged()
         }

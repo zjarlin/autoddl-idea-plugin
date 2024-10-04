@@ -3,7 +3,6 @@ package com.addzero.addl
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.getDatabaseDDLGenerator
 import com.addzero.addl.autoddlstarter.generator.entity.DDLRangeContextUserInput
 import com.addzero.addl.autoddlstarter.generator.factory.DDLContextFactory4UserInputMetaInfo
-import com.addzero.addl.settings.MyPluginSettings
 import com.alibaba.fastjson2.JSON
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -40,11 +39,13 @@ class AutoDDL : AnAction() {
         val textField = JBTextField(ddlResult)
 
         // 调用showTextAreaDialog
+        val delimiters = System.lineSeparator()
         Messages.showTextAreaDialog(textField,                        // 第一个参数为JTextField
             "Generated DDL",                  // 窗口标题
             "SQL Output",                     // DimensionServiceKey
-            { input -> input.split("\n") },   // parser: 将输入按行解析成List
-            { lines -> lines.joinToString("\n") }  // lineJoiner: 将List连接成字符串
+            { input -> input.split(delimiters) },   // parser: 将输入按行解析成List
+            { lines -> lines.joinToString(delimiters) }
+//               lineJoiner: 将List连接成字符串
         )
     }
 
