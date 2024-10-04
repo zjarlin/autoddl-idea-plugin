@@ -7,21 +7,10 @@ import com.addzero.addl.autoddlstarter.generator.entity.DDLContext
 import com.addzero.addl.autoddlstarter.generator.entity.JavaFieldMetaInfo
 import com.addzero.addl.util.JlStrUtil
 
-/**
- * 达梦
- *
- * @author zjarlin
- * @see DatabaseDDLGenerator
- *
- * @since 2024/01/16
- */
 class DMSQLDDLGenerator : DatabaseDDLGenerator() {
     override fun generateCreateTableDDL(ddlContext: DDLContext): String {
-        var (tableChineseName, tableEnglishName, databaseType,
-        databaseName, dto) = ddlContext
-
-
-     tableEnglishName = tableEnglishName.uppercase() // 达梦数据库表名通常为大写
+        var (tableChineseName, tableEnglishName, databaseType, databaseName, dto) = ddlContext
+        tableEnglishName = tableEnglishName.uppercase()
 
         val tableRef = if (databaseName.isBlank()) {
             JlStrUtil.makeSurroundWith(tableEnglishName.uppercase(), "\"")
@@ -29,45 +18,57 @@ class DMSQLDDLGenerator : DatabaseDDLGenerator() {
             "\"$databaseName\".\"${tableEnglishName.uppercase()}\""
         }
 
-
         val createTableSQL = """
-    CREATE TABLE "$tableRef" (
-        "ID" VARCHAR(64) NOT NULL AUTO_INCREMENT,
-        "CREATED_BY" VARCHAR(255) NOT NULL COMMENT '创建者',
-        "UPDATED_BY" VARCHAR(255) NOT NULL COMMENT '更新者',
-        "CREATED_TIME" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-        "UPDATED_TIME" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    CREATE TABLE $tableRef (
+        "ID" VARCHAR2(64) NOT NULL,
+        "CREATE_BY" VARCHAR2(255) NOT NULL,
+        "UPDATE_BY" VARCHAR2(255) NOT NULL,
+        "CREATE_TIME" TIMESTAMP,
+        "UPDATE_TIME" TIMESTAMP,
         ${
             dto.joinToString(System.lineSeparator()) {
                 """
-                    "${it.colName.uppercase()}" ${it.colType}  COMMENT '${it .colComment}' ,
+                    "${it.colName.uppercase()}" ${it.colType} ${it.colLength?.let { length -> "($length)" }} NOT NULL
                 """.trimIndent()
             }
-        }
+        },
         PRIMARY KEY ("ID")
-    ) STORAGE(ON "MAIN", CLUSTERBTR)
-    COMMENT = '$tableChineseName'; 
-""".trimIndent()
-        return createTableSQL
+    );
+
+    COMMENT ON TABLE "$tableEnglishName" IS '$tableChineseName';
+    """.trimIndent()
+
+        // 添加字段注释
+        val comments = dto.joinToString(System.lineSeparator()) {
+            """
+            COMMENT ON COLUMN $tableRef."${it.colName.uppercase()}" IS '${it.colComment}';
+            """.trimIndent()
+        }
+
+        return "$createTableSQL\n$comments"
     }
 
     override fun generateAddColDDL(ddlContext: DDLContext): String {
         val (tableChineseName, tableEnglishName, databaseType, databaseName, dto) = ddlContext
         val dmls = dto.joinToString(System.lineSeparator()) {
 
-            // 如果 databaseName 不为空，则拼接成 databaseName.tableEnglishName
             val tableRef = if (databaseName.isBlank()) {
                 JlStrUtil.makeSurroundWith(tableEnglishName.uppercase(), "\"")
             } else {
                 "\"$databaseName\".\"${tableEnglishName.uppercase()}\""
             }
 
-            // 生成 ALTER 语句以及字段注释
+            // 生成 ALTER 语句以及字段属性
             val upperCaseColName = StrUtil.toUnderlineCase(it.colName).uppercase()
-            """
-            ALTER TABLE $tableRef ADD COLUMN "$upperCaseColName" ${it.colType}(${it.colLength}) ; 
+            val addColumnDDL = """
+            ALTER TABLE $tableRef ADD ("$upperCaseColName" ${it.colType}(${it.colLength})); 
+            """.trimIndent()
+
+            val commentDDL = """
             COMMENT ON COLUMN $tableRef."$upperCaseColName" IS '${it.colComment}';
-        """.trimIndent()
+            """.trimIndent()
+
+            "$addColumnDDL\n$commentDDL"
         }
 
         return dmls
@@ -80,5 +81,4 @@ class DMSQLDDLGenerator : DatabaseDDLGenerator() {
     override fun mapTypeByJavaType(javaFieldMetaInfo: JavaFieldMetaInfo): String {
         return fieldMappings.find { it.predi.test(javaFieldMetaInfo) }?.dmType!!
     }
-
 }

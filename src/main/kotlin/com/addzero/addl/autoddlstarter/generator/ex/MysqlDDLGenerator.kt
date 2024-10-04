@@ -18,10 +18,10 @@ class MysqlDDLGenerator : DatabaseDDLGenerator() {
         val createTableSQL = """
     CREATE TABLE `$tableEnglishName` (
         `id` VARCHAR(64) NOT NULL ,
-        `created_by` VARCHAR(255) NOT NULL COMMENT '创建者',
-        `updated_by` VARCHAR(255) NOT NULL COMMENT '更新者',
-        `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-        `updated_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+        `creat_by` VARCHAR(255) NOT NULL COMMENT '创建者',
+        `update_by` VARCHAR(255) NOT NULL COMMENT '更新者',
+        `creat_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+        `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
         ${
             dto.joinToString(System.lineSeparator()) {
                 val colLength =it.colLength

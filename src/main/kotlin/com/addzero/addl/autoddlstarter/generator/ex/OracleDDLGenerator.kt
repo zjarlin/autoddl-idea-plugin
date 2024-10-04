@@ -20,56 +20,65 @@ class OracleDDLGenerator : DatabaseDDLGenerator() {
 
         val createTableSQL = """
     CREATE TABLE $tableRef (
-        "ID" NUMBER(19, 0) NOT NULL,
-        "CREATED_BY" VARCHAR2(255) NOT NULL COMMENT '创建者',
-        "UPDATED_BY" VARCHAR2(255) NOT NULL COMMENT '更新者',
-        "CREATED_TIME" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-        "UPDATED_TIME" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+        "ID" VARCHAR(64) NOT NULL,
+        "CREATE_BY" VARCHAR2(255) NOT NULL,
+        "UPDATE_BY" VARCHAR2(255) NOT NULL,
+        "CREATE_TIME" TIMESTAMP,
+        "UPDATE_TIME" TIMESTAMP,
         ${
             dto.joinToString(System.lineSeparator()) {
                 """
-                    "${it.colName.uppercase()}" ${it.colType} COMMENT '${it.colComment}'
+                    "${it.colName.uppercase()}" ${it.colType} ${it.colLength?.let { length -> "($length)" }} NOT NULL
                 """.trimIndent()
             }
         },
         PRIMARY KEY ("ID")
     );
+
     COMMENT ON TABLE "$tableEnglishName" IS '$tableChineseName';
-""".trimIndent()
-        return createTableSQL
+    """.trimIndent()
+
+        // 添加字段注释
+        val comments = dto.joinToString(System.lineSeparator()) {
+            """
+            COMMENT ON COLUMN $tableRef."${it.colName.uppercase()}" IS '${it.colComment}';
+            """.trimIndent()
+        }
+
+        return "$createTableSQL\n$comments"
     }
 
     override fun generateAddColDDL(ddlContext: DDLContext): String {
         val (tableChineseName, tableEnglishName, databaseType, databaseName, dto) = ddlContext
         val dmls = dto.joinToString(System.lineSeparator()) {
 
-            // 如果 databaseName 不为空，则拼接成 databaseName.tableEnglishName
             val tableRef = if (databaseName.isBlank()) {
                 JlStrUtil.makeSurroundWith(tableEnglishName.uppercase(), "\"")
             } else {
                 "\"$databaseName\".\"${tableEnglishName.uppercase()}\""
             }
 
-            // 生成 ALTER 语句以及字段注释
+            // 生成 ALTER 语句以及字段属性
             val upperCaseColName = StrUtil.toUnderlineCase(it.colName).uppercase()
-            """
+            val addColumnDDL = """
             ALTER TABLE $tableRef ADD ("$upperCaseColName" ${it.colType}(${it.colLength})); 
+            """.trimIndent()
+
+            val commentDDL = """
             COMMENT ON COLUMN $tableRef."$upperCaseColName" IS '${it.colComment}';
-        """.trimIndent()
+            """.trimIndent()
+
+            "$addColumnDDL\n$commentDDL"
         }
 
         return dmls
     }
 
-
     override fun mapTypeByMysqlType(mysqlType: String): String {
         return fieldMappings.find { it.mysqlType.equals(mysqlType, ignoreCase = true) }?.oracleType!!
     }
 
-
     override fun mapTypeByJavaType(javaFieldMetaInfo: JavaFieldMetaInfo): String {
         return fieldMappings.find { it.predi.test(javaFieldMetaInfo) }?.oracleType!!
-
     }
-
 }
