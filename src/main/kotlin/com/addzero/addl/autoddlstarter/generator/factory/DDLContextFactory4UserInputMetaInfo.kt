@@ -2,6 +2,7 @@ package com.addzero.addl.autoddlstarter.generator.factory
 
 import cn.hutool.core.util.ClassUtil
 import cn.hutool.core.util.StrUtil
+import cn.hutool.extra.pinyin.PinyinUtil
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.fieldMappings
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.getDatabaseDDLGenerator
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.getLength

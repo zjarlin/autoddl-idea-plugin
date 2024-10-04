@@ -3,6 +3,7 @@ package com.addzero.addl
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.getDatabaseDDLGenerator
 import com.addzero.addl.autoddlstarter.generator.entity.DDLRangeContextUserInput
 import com.addzero.addl.autoddlstarter.generator.factory.DDLContextFactory4UserInputMetaInfo
+import com.addzero.addl.settings.MyPluginSettings
 import com.alibaba.fastjson2.JSON
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -61,7 +62,13 @@ private fun genDDL(formDTO: FormDTO): String {
 
     val databaseDDLGenerator = getDatabaseDDLGenerator(dbType)
     val generateCreateTableDDL = databaseDDLGenerator.generateCreateTableDDL(createDDLContext)
-    val getenv = System.getenv("DASHSCOPE_API_KEY")
+
+    val settings = MyPluginSettings.instance
+
+// 修改设置项
+    val getenv = settings.state.aliLingjiModelKey
+
+// 保存设置（自动持久化）
     if (getenv.isBlank()) {
         throw RuntimeException("请设置环境变量 DASHSCOPE_API_KEY")
     }
