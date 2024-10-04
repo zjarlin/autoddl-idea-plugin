@@ -7,7 +7,7 @@ import com.addzero.addl.ktututil.parseObject
 import com.addzero.addl.ktututil.toJson
 import com.addzero.addl.settings.MyPluginSettings
 import com.addzero.addl.util.Dba
-import com.addzero.addl.util.JlStrUtil.extractCodeBlockContent
+import com.addzero.addl.util.JlStrUtil.extractMarkdownBlockContent
 import com.addzero.addl.util.fieldinfo.getSimpleFieldInfoStr
 
 
@@ -134,7 +134,7 @@ fun quesDba(string: String): FormDTO? {
             val content = it?.message?.content
             content
         }?.joinToString()
-        val let = joinToString?.let { extractCodeBlockContent(it) }
+        val let = joinToString?.let { extractMarkdownBlockContent(it) }
         val parseObject1 = let?.parseObject(FormDTO::class.java)
         return parseObject1
     } catch (e: Exception) {

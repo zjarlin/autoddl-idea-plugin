@@ -57,10 +57,8 @@ object JlStrUtil {
         if (Objects.isNull(source) || source.isEmpty() || Objects.isNull(duplicateElement) || duplicateElement.isEmpty()) {
             return source
         }
-
         val sb = StringBuilder()
         var previous = "" // 初始化前一个元素，用于比较
-
         var i = 0
         while (i < source.length) {
             val elementLength = duplicateElement.length
@@ -76,11 +74,15 @@ object JlStrUtil {
                 i++
             }
         }
-
         return sb.toString()
     }
 
-    fun extractCodeBlockContent(markdown: String): String {
+    /**
+     *标记为代码块
+     * @param [markdown]
+     * @return [String]
+     */
+    fun extractMarkdownBlockContent(markdown: String): String {
         val regex = Regex("```\\w*\\s*(.*?)\\s*```", RegexOption.DOT_MATCHES_ALL)
         val matchResult = regex.find(markdown)
         return matchResult?.groups?.get(1)?.value?.trim() ?: ""
