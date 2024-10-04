@@ -54,10 +54,10 @@ dependencies {
 
 tasks {
 // 将依赖打进jar包中
-    jar.configure {
-        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
-        from(configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) })
-    }
+//    jar.configure {
+//        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
+//        from(configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) })
+//    }
 
     // Set the JVM compatibility versions
     withType<JavaCompile> {

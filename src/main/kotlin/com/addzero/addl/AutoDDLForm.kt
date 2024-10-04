@@ -65,14 +65,14 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
 
         // 表单信息区域
         val formPanel = JPanel(GridLayout(4, 2))
+        formPanel.add(JLabel("*表中文名:"))
+        tableNameField = JTextField()
+        formPanel.add(tableNameField)
 
         formPanel.add(JLabel("*数据库类型:"))
         dbTypeComboBox = ComboBox(arrayOf(MYSQL, POSTGRESQL, DM, ORACLE))
         formPanel.add(dbTypeComboBox)
 
-        formPanel.add(JLabel("*表中文名:"))
-        tableNameField = JTextField()
-        formPanel.add(tableNameField)
 
         formPanel.add(JLabel("表名(可空,为空默认表中文名转拼音):"))
         tableEnglishNameField = JTextField()
