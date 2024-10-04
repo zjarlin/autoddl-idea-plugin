@@ -1,17 +1,14 @@
 package com.addzero.addl
 
-import cn.hutool.extra.pinyin.PinyinUtil
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.getDatabaseDDLGenerator
 import com.addzero.addl.autoddlstarter.generator.entity.DDLRangeContextUserInput
 import com.addzero.addl.autoddlstarter.generator.factory.DDLContextFactory4UserInputMetaInfo
-import com.addzero.addl.util.PinYin4JUtils
 import com.alibaba.fastjson2.JSON
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
-import java.lang.Thread.currentThread
-import javax.swing.JTextField
+import com.intellij.ui.components.JBTextField
 
 class AutoDDL : AnAction() {
 
@@ -39,7 +36,7 @@ class AutoDDL : AnAction() {
 
     private fun showDDLInSqlEditor(project: Project?, ddlResult: String) {
         // 创建一个文本域
-        val textField = JTextField(ddlResult)
+        val textField = JBTextField(ddlResult)
 
         // 调用showTextAreaDialog
         Messages.showTextAreaDialog(textField,                        // 第一个参数为JTextField

@@ -1,6 +1,3 @@
-import org.gradle.internal.impldep.org.eclipse.jgit.lib.ObjectChecker.type
-import org.jetbrains.intellij.pluginRepository.internal.api.PluginUpdateVersion
-
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
@@ -24,13 +21,28 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
+
+
+    version.set("2022.2")
+    type.set("IC") // Target IDE Platform
+    plugins.set(
+        listOf(
+            "com.intellij.java",
+            "org.jetbrains.kotlin"
+        )
+    )
+
+
+
 //    localPath.set(ideahome)
     version.set("2023.2.6")
     type.set("IC") // Target IDE Platform
-    plugins.set(listOf(
+//    plugins.set(
+//        listOf(
 //    "com.intellij.java", "org.jetbrains.kotlin"
 
-    ))
+//        )
+//    )
 }
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -39,7 +51,14 @@ dependencies {
     implementation("com.alibaba:fastjson:2.0.52")
 }
 
+
 tasks {
+// 将依赖打进jar包中
+    jar.configure {
+        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
+        from(configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) })
+    }
+
     // Set the JVM compatibility versions
     withType<JavaCompile> {
         sourceCompatibility = "17"
