@@ -1,36 +1,21 @@
-# autoddl-idea-plugin
+# AutoDDL Plugin for IntelliJ IDEA
 
-#### Description
-{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
+The **AutoDDL** plugin helps you effortlessly generate `CREATE TABLE` statements within IntelliJ IDEA. Users can either rely on the power of large language models (LLMs) to initially generate structured form metadata (hereinafter referred to as **Form Cell Metadata J**) or manually write forms to generate DDL statements.
 
-#### Software Architecture
-Software architecture description
+## Features
+- **Effortless Table Creation**: Automatically generate `CREATE TABLE` SQL statements based on structured form metadata.
+- **LLM Support**: Users can optionally use large language models to automatically generate the structured form for creating tables.
+- **Java Type Mapping**: No need to worry about database column types. The plugin maps Java types to database types and generates the corresponding DDL statements.
+- **Manual Editing**: Users can still edit the generated form metadata **J** for further customization of the DDL.
+- **Manual Form Writing**: For users who prefer manual control, it's also possible to write forms directly and generate DDL without invoking the LLM capabilities.
 
-#### Installation
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### Instructions
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### Contribution
-
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
-
-
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+## Usage
+1. **Plugin Entry**: Find the plugin under the **Tools** menu -> **AutoDDL** in IntelliJ IDEA.
+2. **Initial Setup**: Before using the plugin, you need to configure the API Key for the LLM:
+    - Currently, only **Alibaba Lingji** (`DASHSCOPE_API_KEY`) is supported.
+    - You can configure your API Key in **IDEA Settings**.
+3. **Invoking LLM for Table Creation**:
+    - Choose to leverage the LLM to generate structured form metadata for table creation.
+    - After generation, you can still make manual edits to the form if necessary.
+4. **Manual Form Writing**:
+    - If preferred, users can manually write the forms to generate DDL statements without relying on the LLM.

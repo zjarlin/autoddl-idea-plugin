@@ -1,39 +1,25 @@
-# autoddl-idea-plugin
 
-#### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+### 中文版 `README.zh.md`
 
-#### 软件架构
-软件架构说明
+```markdown
+# AutoDDL 插件 for IntelliJ IDEA
 
+**AutoDDL** 插件帮助您在 IntelliJ IDEA 中甜甜的生成 `CREATE TABLE` 语句。用户可以选择调用大模型的能力，自动生成结构化建表表单元数据（以下简称 **建表的表单元数据 J**），也可以手动编写表单来生成 DDL 语句。
 
-#### 安装教程
+## 功能特性
+- **甜甜的表创建**：基于结构化表单元数据自动生成 `CREATE TABLE` SQL 语句。
+- **大模型支持**：用户可选择调用大语言模型（LLM）的能力，自动生成建表表单元数据。
+- **Java 类型映射**：用户无需关心数据库字段类型，插件会自动将 Java 类型映射到数据库类型，并生成相应的 DDL 语句。
+- **二次编辑**：用户仍然可以对生成的表单元数据 **J** 进行二次编辑，以进一步自定义 DDL。
+- **手动编写表单**：如果用户不想调用大模型能力，也可以手动编写表单并生成 DDL 语句。
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+## 使用说明
+1. **插件入口**：在 IntelliJ IDEA 的 **Tools** 菜单 -> **AutoDDL** 下找到插件入口。
+2. **初始配置**：在使用插件之前，您需要配置 LLM 的 API Key：
+- 目前只支持 **阿里灵积**（`DASHSCOPE_API_KEY`）。
+- 您可以在 **IDEA 设置** 中配置 API Key。
+3. **调用大模型生成建表表单**：
+- 选择使用大模型生成建表的结构化表单元数据。
+- 生成后，您仍然可以对表单进行手动编辑。
+4. **手动编写表单**：
+- 如果您偏向手动编写表单，您可以直接手动编写表单来生成 DDL 语句，而不调用大模型能力。
