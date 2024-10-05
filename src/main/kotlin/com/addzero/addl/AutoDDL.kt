@@ -61,13 +61,11 @@ private fun genDDL(formDTO: FormDTO): String {
 
         DDLRangeContextUserInput(it.javaType, it.fieldName, it.fieldChineseName)
     }
-    val createDDLContext =
-        DDLContextFactory4UserInputMetaInfo.createDDLContext(tableEnglishName, tableName, dbType, map)
-
+    //用户输入元数据工厂构建方法
+    val createDDLContext = DDLContextFactory4UserInputMetaInfo.createDDLContext(tableEnglishName, tableName, dbType, map)
+    //未来加入实体元数据抽取工厂
     val databaseDDLGenerator = getDatabaseDDLGenerator(dbType)
     val generateCreateTableDDL = databaseDDLGenerator.generateCreateTableDDL(createDDLContext)
-
-
     return generateCreateTableDDL
 }
 

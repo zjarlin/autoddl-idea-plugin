@@ -96,11 +96,13 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         addAdvancedPanel(panel)
         // 添加使用说明
         val usageInstruction =
-            JLabel("""<html><font color='orange'>
+            JLabel(
+                """<html><font color='orange'>
             删除选中行：按住Ctrl(跳跃选)或Shift(连续选)，点击要删除的行，然后点击“删除选中行”按钮。
             <br>
             问问大模型：您可以说:创建一张xx表，包含xxx字段。
-            </font></html>""")
+            </font></html>"""
+            )
 
 
         panel.add(usageInstruction, BorderLayout.SOUTH)
@@ -172,7 +174,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
                     fieldsTable!!.editCellAt(row, column)
                     fieldsTable!!.editorComponent?.requestFocus()
                 }
-               deleteButton.isVisible = true
+                deleteButton.isVisible = true
             }
         })
 
@@ -242,32 +244,6 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         mainPanel!!.add(advancedPanelContainer, BorderLayout.NORTH)
     }
 
-//    private fun createLLMPanel(): JPanel {
-//        val llmPanel = JPanel(BorderLayout())
-//        val inputTextArea = JTextArea(5, 30) // 长文本框
-//        val submitButton = JButton("使用LLM建议回填表单(响应较慢,耐心等待即可)")
-//
-//        submitButton.addActionListener {
-//            // 这里调用大模型接口，并获取表单实体对象
-//            val inputText = inputTextArea.text
-//            val formEntity = callLargeModelApi(inputText) // 调用你的大模型接口
-//            // 将表单数据回填到表单输入区域
-//            tableNameField!!.text = formEntity.tableName
-//            tableEnglishNameField!!.text = formEntity.tableEnglishName
-//            dbTypeComboBox!!.selectedItem = formEntity.dbType
-//            dbNameField!!.text = formEntity.dbName
-//            // 这里确保字段可以二次编辑
-//            fieldsTableModel!!.fields = formEntity.fields?.toMutableList() as MutableList<FieldDTO>
-//            // 让用户可以编辑字段表格
-//            fieldsTableModel!!.fireTableDataChanged()
-//        }
-//
-//        llmPanel.add(inputTextArea, BorderLayout.CENTER)
-//        llmPanel.add(submitButton, BorderLayout.SOUTH)
-//        llmPanel.isVisible = false // 默认隐藏
-//
-//        return llmPanel
-//    }
 
     private fun createLLMPanel(): JPanel {
         val llmPanel = JPanel(BorderLayout())
@@ -305,7 +281,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
                         // 任务完成后恢复按钮状态并隐藏加载状态
                         submitButton.isEnabled = true
                         loadingLabel.isVisible = false
-                        llmPanel?.isVisible=false // 回答完隐藏LLM面板
+                        llmPanel?.isVisible = false // 回答完隐藏LLM面板
                     }
                 }
             }
@@ -339,15 +315,52 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
             return FormDTO(tableName, tabEngName, dbType, dbName, fields!!)
         }
 
-    // 右下角的按钮（确定、取消）
+    private fun validateFormDTO(formDTO: FormDTO): Pair<Boolean, String> {
+        val (tableName, tableEnglishName, dbType, dbName, fields) = formDTO
+        val errorMessages = mutableListOf<String>()
+        var isValid = true
+
+        if (tableName.isBlank()) {
+            isValid = false
+            errorMessages.add("表中文名不能为空！")
+        }
+
+        // 例如，如果需要验证数据库名称
+        if (fields.isEmpty()) {
+            isValid = false
+            errorMessages.add("字段列表不能为空！")
+        }
+
+        // 使用 joinToString 合并错误消息
+        val errorMessage = errorMessages.joinToString("\n")
+        return Pair(isValid, errorMessage)
+    }
+
+
     override fun createSouthPanel(): JComponent {
         val buttons = JPanel()
-        val okButton = JButton("OK")
-        okButton.addActionListener { close(OK_EXIT_CODE) }
+        val okButton = JButton("确定生成")
+        okButton.addActionListener {
+            // 获取当前的表单数据
+            val formDTO = this.formDTO
+            // 验证表单数据
+            val (isValid, errorMessage) = validateFormDTO(formDTO)
+
+            if (!isValid) {
+                // 展示合并的错误消息
+                JOptionPane.showMessageDialog(mainPanel, errorMessage, "输入错误", JOptionPane.ERROR_MESSAGE)
+                return@addActionListener // 阻止关闭对话框
+            }
+
+            close(OK_EXIT_CODE) // 验证通过，关闭对话框
+        }
         buttons.add(okButton)
-        val cancelButton = JButton("Cancel")
+
+        val cancelButton = JButton("取消生成")
         cancelButton.addActionListener { close(CANCEL_EXIT_CODE) }
         buttons.add(cancelButton)
+
         return buttons
     }
+
 }

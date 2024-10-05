@@ -14,6 +14,10 @@ import com.addzero.addl.autoddlstarter.generator.entity.DDlRangeContext
 import com.addzero.addl.autoddlstarter.generator.entity.JavaFieldMetaInfo
 import com.addzero.addl.util.PinYin4JUtils
 
+/**
+ * @author zjarlin
+ * @date 2024/10/05
+ */
 object DDLContextFactory4UserInputMetaInfo {
     fun createDDLContext(
         tableEngLishName: String,
