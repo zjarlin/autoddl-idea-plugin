@@ -1,3 +1,5 @@
+import cn.hutool.core.collection.CollUtil
+import cn.hutool.core.util.ArrayUtil
 import com.addzero.addl.FieldDTO
 import javax.swing.table.DefaultTableModel
 
@@ -29,11 +31,13 @@ class FieldsTableModel : DefaultTableModel() {
     }
 
     override fun setValueAt(aValue: Any?, rowIndex: Int, columnIndex: Int) {
-        val field = fields[rowIndex]
-        when (columnIndex) {
-            0 -> field.javaType = aValue as String
-            1 -> field.fieldName = aValue as String
-            2 -> field.fieldChineseName = aValue as String
+        val field = CollUtil.get(fields, rowIndex)
+        if (field != null) {
+            when (columnIndex) {
+                0 -> field.javaType = aValue as String
+                1 -> field.fieldName = aValue as String
+                2 -> field.fieldChineseName = aValue as String
+            }
         }
         fireTableCellUpdated(rowIndex, columnIndex)
     }

@@ -1,5 +1,6 @@
 package com.addzero.addl
 
+import cn.hutool.core.util.StrUtil
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.getDatabaseDDLGenerator
 import com.addzero.addl.autoddlstarter.generator.entity.DDLRangeContextUserInput
 import com.addzero.addl.autoddlstarter.generator.factory.DDLContextFactory4UserInputMetaInfo
@@ -26,7 +27,9 @@ class AutoDDL : AnAction() {
 
             // 表单被提交，生成DDL
             val formDTO = form.formDTO
-            formDTO.fields = formDTO.fields.filter { it.javaType.isNotBlank() }
+            formDTO.fields = formDTO.fields.filter {
+                StrUtil.isAllNotBlank(it.javaType, it.fieldChineseName)
+            }
             val ddlResult = genDDL(formDTO)
             // 使用 IntelliJ 内置的 SQL 编辑器显示 SQL 语句
             showDDLInSqlEditor(project, ddlResult)
