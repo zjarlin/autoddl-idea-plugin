@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isUseK2
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
@@ -5,7 +7,7 @@ plugins {
 }
 
 group = "com.addzero"
-version = "1.1"
+version = "1.2"
 configurations.all {
     resolutionStrategy.sortArtifacts(ResolutionStrategy.SortOrder.DEPENDENCY_FIRST)
 }
@@ -65,7 +67,10 @@ tasks {
         targetCompatibility = "17"
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions{
+            jvmTarget = "17"
+            freeCompilerArgs += "-Xuse-k2" // 启用 K2 编译器
+        }
     }
 
     patchPluginXml {
