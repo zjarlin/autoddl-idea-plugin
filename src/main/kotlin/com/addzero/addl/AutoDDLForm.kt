@@ -1,6 +1,7 @@
 package com.addzero.addl
 
 import FieldsTableModel
+import cn.hutool.core.util.ArrayUtil
 import com.addzero.addl.autoddlstarter.generator.IDatabaseGenerator.Companion.javaTypesEnum
 import com.addzero.addl.autoddlstarter.generator.consts.DM
 import com.addzero.addl.autoddlstarter.generator.consts.MYSQL
@@ -54,7 +55,9 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         tabbedPane.addTab("根据元数据生成建表语句", panelGenerateDDL)
 //        tabbedPane.addTab("根据实体生成建表语句", panelFunction1)
 //        tabbedPane.addTab("根据Jimmer实体生成建表语句", panelFunction2)
-
+        // 设置 mainPanel 的首选尺寸和最大尺寸
+        mainPanel!!.preferredSize = Dimension(800, 600) // 设置宽度800，高度600的首选尺寸
+        mainPanel!!.maximumSize = Dimension(1000, 800)  // 设置最大宽度1000，高度800
         mainPanel!!.add(tabbedPane, BorderLayout.CENTER)
 
         return mainPanel
@@ -150,6 +153,13 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
 
         // 启用单元格点击编辑模式
         fieldsTable!!.surrendersFocusOnKeystroke = true
+
+
+        // 删除选中行的按钮
+        val deleteButton = JButton("删除选中行")
+        val b = fieldsTable!!.rowCount > 0
+        deleteButton.isVisible = b
+
         fieldsTable!!.addMouseListener(object : MouseAdapter() {
             override fun mousePressed(e: MouseEvent) {
                 val row = fieldsTable!!.rowAtPoint(e.point)
@@ -162,14 +172,15 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
                     fieldsTable!!.editCellAt(row, column)
                     fieldsTable!!.editorComponent?.requestFocus()
                 }
+               deleteButton.isVisible = true
             }
         })
 
         // 允许多行选择
         fieldsTable!!.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
 
-        // 删除选中行的按钮
-        val deleteButton = JButton("删除选中行")
+
+
         deleteButton.addActionListener {
             deleteSelectedRows()  // 调用删除选中行的函数
         }
@@ -190,8 +201,11 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
         if (selectedRows.isNotEmpty()) {
             // 按倒序删除选中行，以避免索引问题
             for (i in selectedRows.size - 1 downTo 0) {
-                fieldsTableModel!!.fields.removeAt(selectedRows[i])
-//                fieldsTableModel!!.removeRow(selectedRows[i])
+                val index = ArrayUtil.get<Int>(selectedRows, i)
+                if (index != null) {
+                    fieldsTableModel!!.fields.removeAt(index)
+//                    fieldsTableModel!!.removeRow(index)
+                }
             }
             fieldsTableModel!!.fireTableDataChanged() // 通知表格模型数据已经更改
         }
@@ -213,7 +227,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
 
     private fun addAdvancedPanel(panel: JPanel) {
         val advancedPanelContainer = JPanel(BorderLayout())
-        val toggleButton = JToggleButton("问问大模型(再次点击收起)", false)
+        val toggleButton = JToggleButton("问问大模型", false)
         llmPanel = createLLMPanel() // 创建LLM面板
 
         // 折叠菜单的逻辑
@@ -258,15 +272,13 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
     private fun createLLMPanel(): JPanel {
         val llmPanel = JPanel(BorderLayout())
         val inputTextArea = JTextArea(5, 30) // 长文本框
-        val submitButton = JButton("使用LLM建议回填表单(响应较慢,耐心等待即可)")
+        val submitButton = JButton("使用大模型的建议回填表单")
         val loadingLabel = JLabel("正在加载，请稍候...") // 显示加载状态的Label
         loadingLabel.isVisible = false // 初始状态为不可见
-
         submitButton.addActionListener {
             // 禁用按钮并显示加载状态
             submitButton.isEnabled = false
             loadingLabel.isVisible = true
-
             // 创建并执行异步任务
             val task = object : SwingWorker<FormDTO, Void>() {
                 override fun doInBackground(): FormDTO {
@@ -293,6 +305,7 @@ class AutoDDLForm(project: Project?) : DialogWrapper(project) {
                         // 任务完成后恢复按钮状态并隐藏加载状态
                         submitButton.isEnabled = true
                         loadingLabel.isVisible = false
+                        llmPanel?.isVisible=false // 回答完隐藏LLM面板
                     }
                 }
             }
